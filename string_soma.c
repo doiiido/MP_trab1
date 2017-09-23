@@ -1,6 +1,7 @@
 /*! \file */
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 
 int soma_string(const char * string_entrada ){
 	char ref = '0';
@@ -9,7 +10,7 @@ int soma_string(const char * string_entrada ){
 	int sum=0, int_last_cont=0, i=0, j=0;
 	int potencia10 = 0;/**< guarda a ultima potencia de 10*/
 	int last = 0; /**< marca se o ultimo foi \n(0), delimitador(1) ou numero(2)*/
-	do{
+	while(1){
 		sscanf(ptr,"%c", &buff);
 		ptr ++;
 		switch(last){
@@ -36,7 +37,10 @@ int soma_string(const char * string_entrada ){
 				}else if(buff == ','){
 					int_last_cont=0;
 					last = 1;
-				}else if(buff!='\n') return -1;
+				}else if(buff =='\n'){ 
+					int_last_cont=0;
+					last = 0;
+				}else return -1;
 				break;
 			case 1:
 				if(buff >= '0'&& buff <='9'){
@@ -57,12 +61,13 @@ int soma_string(const char * string_entrada ){
 						int_last_cont=0;
 						last = 1;
 					}else return -1;
+				}else if (ptr == string_entrada+strlen(string_entrada)+1){/**< Final do vetor*/
+					return sum;
 				}else{
 					return -1;
 				}
 				break;
 		}
-	}while(buff != '\n');
-	
-	return sum;
+	}
+	return -2;
 }
