@@ -36,7 +36,7 @@ int soma_string(const char * string_entrada ){
 				}else if(buff == ','){
 					int_last_cont=0;
 					last = 1;
-				}
+				}else if(buff!='\n') return -1;
 				break;
 			case 1:
 				if(buff >= '0'&& buff <='9'){
@@ -52,6 +52,11 @@ int soma_string(const char * string_entrada ){
 					int_last[int_last_cont] = buff;
 					int_last_cont ++;
 					last = 2;
+				}else if(buff == ','){
+					if(int_last[int_last_cont-1] == '\n'){
+						int_last_cont=0;
+						last = 1;
+					}else return -1;
 				}else{
 					return -1;
 				}
