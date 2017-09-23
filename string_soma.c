@@ -12,35 +12,50 @@ int soma_string(const char * string_entrada ){
 	do{
 		sscanf(ptr,"%c", &buff);
 		ptr ++;
-		if (last == 2){
-			if(buff >= '0'&& buff <='9'){
-				i = int_last_cont - 1;
-				j=0;
-				while (i>=0){
-					sum -= (int_last[i] - '0')*pow(10,j);
-					i--;
-					j++;
+		switch(last){
+			case 2:
+				if(buff >= '0'&& buff <='9'){
+					i = int_last_cont - 1;
+					j=0;
+					while (i>=0){
+						sum -= (int_last[i] - '0')*pow(10,j);
+						i--;
+						j++;
+					}
+					j = int_last_cont;
+					i=0;
+					while (i<int_last_cont){
+						sum += (int_last[i] - '0')*pow(10,j);
+						i++;
+						j--;
+					}
+					last = 2;
+					sum += buff - '0';
+					int_last[int_last_cont] = buff;
+					int_last_cont ++;
+				}else if(buff == ','){
+					int_last_cont=0;
+					last = 1;
 				}
-				j = int_last_cont;
-				i=0;
-				while (i<int_last_cont){
-					sum += (int_last[i] - '0')*pow(10,j);
-					i++;
-					j--;
+				break;
+			case 1:
+				if(buff >= '0'&& buff <='9'){
+					sum += buff - '0';
+					int_last[int_last_cont] = buff;
+					int_last_cont ++;
+					last = 2;
+				}else return -1;
+				break;
+			case 0:
+				if(buff >= '0'&& buff <='9'){
+					sum += buff - '0';
+					int_last[int_last_cont] = buff;
+					int_last_cont ++;
+					last = 2;
+				}else{
+					return -1;
 				}
-				last = 2;
-				sum += buff - '0';
-				int_last[int_last_cont] = buff;
-				int_last_cont ++;
-			}else if(buff == ','){
-				int_last_cont=0;
-				last = 1;
-			}
-		}else if(buff >= '0'&& buff <='9'){
-			sum += buff - '0';
-			int_last[int_last_cont] = buff;
-			int_last_cont ++;
-			last = 2;
+				break;
 		}
 	}while(buff != '\n');
 	
