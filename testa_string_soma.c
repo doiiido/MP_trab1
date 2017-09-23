@@ -76,6 +76,15 @@ TEST (Calculadora_Trab1, del1_del2_ql_2_del1_1_del2_3_ql){
 TEST (Calculadora_Trab1, 21_virg_12_ql){ 
 	ASSERT_EQ (33, soma_string("21,12\n"));
 }
+TEST (Calculadora_Trab1, sp_21_virg_12_ql){ 
+	ASSERT_EQ (-1, soma_string(" 21,12\n"));
+}
+TEST (Calculadora_Trab1, 21_sp_virg_12_ql){ 
+	ASSERT_EQ (-1, soma_string("21 ,12\n"));
+}
+TEST (Calculadora_Trab1, 21_virg_sp_12_ql){ 
+	ASSERT_EQ (-1, soma_string("21, 12\n"));
+}
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);

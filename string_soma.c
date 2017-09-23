@@ -7,7 +7,7 @@ int soma_string(const char * string_entrada ){
 	char ref = '0';
 	const char * ptr = string_entrada;
 	char buff, int_last[4]={'i','i','i','i'};/**< guarda os inteiros lidos anteriormente para reprocessamento da base 10 (i representa invalido). ex.: 12 = 1*10^1 + 2*10^0.*/
-	int sum=0, int_last_cont=0, i=0, j=0;
+	int sum=0, int_last_cont=0, i=0, j=0, int_readed = 0;
 	int potencia10 = 0;/**< guarda a ultima potencia de 10*/
 	int last = 0; /**< marca se o ultimo foi \n(0), delimitador(1) ou numero(2)*/
 	while(1){
@@ -34,9 +34,11 @@ int soma_string(const char * string_entrada ){
 					sum += buff - '0';
 					int_last[int_last_cont] = buff;
 					int_last_cont ++;
+					int_readed = 1;
 				}else if(buff == ','){
 					int_last_cont=0;
 					last = 1;
+					int_readed = 0;
 				}else if(buff =='\n'){ 
 					int_last_cont=0;
 					last = 0;
@@ -48,6 +50,12 @@ int soma_string(const char * string_entrada ){
 					int_last[int_last_cont] = buff;
 					int_last_cont ++;
 					last = 2;
+					int_readed = 1;
+				}else if (ptr == string_entrada+strlen(string_entrada)+1){/**< Final do vetor*/
+					return sum;
+				}else if(buff =='\n'){ 
+					last = 0;
+					break;
 				}else return -1;
 				break;
 			case 0:
@@ -56,13 +64,18 @@ int soma_string(const char * string_entrada ){
 					int_last[int_last_cont] = buff;
 					int_last_cont ++;
 					last = 2;
+					int_readed = 1;
 				}else if(buff == ','){
-					if(int_last[int_last_cont-1] == '\n'){
-						int_last_cont=0;
-						last = 1;
-					}else return -1;
+					int_last_cont=0;
+					last = 1;
+					if (!int_readed)
+						return -1;
 				}else if (ptr == string_entrada+strlen(string_entrada)+1){/**< Final do vetor*/
+					if (!int_readed)
+						return -1;
 					return sum;
+				}else if(buff =='\n'){ 
+					break;
 				}else{
 					return -1;
 				}
