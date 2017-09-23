@@ -53,11 +53,11 @@ TEST (Calculadora_Trab1, 1_virg_2_virg_3_ql_virg_4_ql){
 TEST (Calculadora_Trab1, 1_virg_neg_virg_3_ql){ 
 	ASSERT_EQ (-1, soma_string("1,-2,3\n"));
 }
-TEST (Calculadora_Trab1, 1_virg_2000_ql){ 
-	ASSERT_EQ (3, soma_string("3,2000\n"));
+TEST (Calculadora_Trab1, 3_virg_2000_ql){ 
+	ASSERT_EQ (-1, soma_string("3,2000\n"));
 }
-TEST (Calculadora_Trab1, 1_virg_2000_virg_3_ql){ 
-	ASSERT_EQ (-1, soma_string("1,2000,3\n"));
+TEST (Calculadora_Trab1, 1_virg_1000_virg_3_ql){ 
+	ASSERT_EQ (1004, soma_string("1,1000,3\n"));
 }
 TEST (Calculadora_Trab1, del_ql_2_del_3_ql){ 
 	ASSERT_EQ (5, soma_string("//[;]\n2;3\n"));

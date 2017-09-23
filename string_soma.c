@@ -6,8 +6,10 @@
 int soma_string(const char * string_entrada ){
 	char ref = '0';
 	const char * ptr = string_entrada;
-	char buff, int_last[4]={'i','i','i','i'};/**< guarda os inteiros lidos anteriormente para reprocessamento da base 10 (i representa invalido). ex.: 12 = 1*10^1 + 2*10^0.*/
+	char buff;
+	char int_last[4]={'i','i','i','i'};/**< guarda os inteiros lidos anteriormente para reprocessamento da base 10 (i representa invalido). ex.: 12 = 1*10^1 + 2*10^0.*/
 	int sum=0, int_last_cont=0, i=0, j=0, int_readed = 0;
+	int ibuff;
 	int potencia10 = 0;/**< guarda a ultima potencia de 10*/
 	int last = 0; /**< marca se o ultimo foi \n(0), delimitador(1) ou numero(2)*/
 	while(1){
@@ -25,10 +27,14 @@ int soma_string(const char * string_entrada ){
 					}
 					j = int_last_cont;
 					i=0;
+					ibuff = sum;
 					while (i<int_last_cont){
 						sum += (int_last[i] - '0')*pow(10,j);
 						i++;
 						j--;
+					}
+					if(sum-ibuff >1000){
+						return -1;
 					}
 					last = 2;
 					sum += buff - '0';
