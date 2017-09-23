@@ -7,16 +7,17 @@
 */
 /** Testes baseados no documento de especificação
 */
+
 TEST (Calculadora_Trab1, 1_virg_2_ql){ 
 	ASSERT_EQ (3, soma_string("1,2\n"));
 }
-TEST (Calculadora_Trab1, 1_virg_2_virg_3_ql){ 
+TEST (Calculadora_Trab1, 3_virg_2_virg_1_ql){ 
 	ASSERT_EQ (6, soma_string("3,2,1\n")); 
 }
 TEST (Calculadora_Trab1, 1_virg_ql){ 
 	ASSERT_EQ (-1, soma_string("1,\n"));
 }
-TEST (Calculadora_Trab1, virg_1_ql){ 
+TEST (Calculadora_Trab1, virg_2_ql){ 
 	ASSERT_EQ (-1, soma_string(",2\n")); 
 }
 TEST (Calculadora_Trab1, 1_2virg_2_ql){ 
@@ -37,10 +38,10 @@ TEST (Calculadora_Trab1, 1_virg_2_ql_sp){
 TEST (Calculadora_Trab1, 1_ql_virg_2_ql){ 
 	ASSERT_EQ (3, soma_string("1\n,2\n")); 
 }
-TEST (Calculadora_Trab1, 1_ql_ql_ql_virg_2_ql){ 
+TEST (Calculadora_Trab1, 1_ql_ql_ql_virg_4_ql){ 
 	ASSERT_EQ (5, soma_string("1\n\n\n,4\n"));
 }
-TEST (Calculadora_Trab1, 1_ql_ql_ql_2_ql_ql_ql_3_ql){ 
+TEST (Calculadora_Trab1, 1_ql_ql_ql_virg_ql_ql_ql_3_ql){ 
 	ASSERT_EQ (4, soma_string("1\n\n\n,\n\n\n3\n")); 
 }
 TEST (Calculadora_Trab1, 1_virg_2_virg_3_virg_4_ql){ 
@@ -52,25 +53,29 @@ TEST (Calculadora_Trab1, 1_virg_2_virg_3_ql_virg_4_ql){
 TEST (Calculadora_Trab1, 1_virg_neg_virg_3_ql){ 
 	ASSERT_EQ (-1, soma_string("1,-2,3\n"));
 }
-TEST (Calculadora_Trab1, 1_virg_1001_ql){ 
+TEST (Calculadora_Trab1, 1_virg_2000_ql){ 
 	ASSERT_EQ (3, soma_string("3,2000\n"));
 }
-TEST (Calculadora_Trab1, 1_virg_1001_virg_3_ql){ 
+TEST (Calculadora_Trab1, 1_virg_2000_virg_3_ql){ 
 	ASSERT_EQ (-1, soma_string("1,2000,3\n"));
 }
-TEST (Calculadora_Trab1, del_ql_1_del_2_ql){ 
+TEST (Calculadora_Trab1, del_ql_2_del_3_ql){ 
 	ASSERT_EQ (5, soma_string("//[;]\n2;3\n"));
 }
-TEST (Calculadora_Trab1, del_1_del_2_del_3_ql){ 
+TEST (Calculadora_Trab1, del_2_del_3_del_4_ql){ 
 	ASSERT_EQ (-1, soma_string("//[***]2***3***4\n"));
 }
-TEST (Calculadora_Trab1, del1_del2_ql_1_del1_2_del2_3_ql){ 
+TEST (Calculadora_Trab1, del1_del2_ql_2_del1_1_del2_3_ql){ 
 	ASSERT_EQ (6, soma_string("//[**][%%%]\n2**1%%%3\n"));
 }
 
 /**\Class testes_unit
 		Testes de desenvolvimento
 */
+
+TEST (Calculadora_Trab1, 21_virg_12_ql){ 
+	ASSERT_EQ (33, soma_string("21,12\n"));
+}
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
