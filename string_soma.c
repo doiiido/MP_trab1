@@ -3,6 +3,10 @@
 #include <math.h>
 #include <string.h>
 
+
+/** A funçao matches_next recebe uma string, o tamanho dela, um array de strings a serem comparadas e a quantidade que há nesse array
+*	Retornado se foi encontrado ou nao e passando via referencia o tamanho da string encontrada
+*/
 int matches_next (const int size,char *string, char * regex, int qte,int *size_of_del){
 	int i;
 	char * ptr, *ptr2 = regex;
@@ -21,12 +25,12 @@ int soma_string(char * string_entrada ){
 	const int size = strlen(string_entrada)+1;
 	const char * ptr = string_entrada;
 	char buff[size], sbuff[size], cbuff[2];
-	char int_last[4]={'i','i','i','i'};/**< guarda os inteiros lidos anteriormente para reprocessamento da base 10 (i representa invalido). ex.: 12 = 1*10^1 + 2*10^0.*/
+	char int_last[4]={'i','i','i','i'};/* guarda os inteiros lidos anteriormente para reprocessamento da base 10 (i representa invalido). ex.: 12 = 1*10^1 + 2*10^0.*/
 	char delimitador[size][size];
 	int sum=0, int_last_cont=0, i=0, j=0, int_readed = 0, qte_int_readed=0;
 	int ibuff;
-	int potencia10 = 0;/**< guarda a ultima potencia de 10*/
-	int last = -1; /**< marca se o ultimo foi \n(0), delimitador(1), numero(2), definir delimitador '/' (3) ou ainda incluindo delimitadores*/
+	int potencia10 = 0;/* guarda a ultima potencia de 10*/
+	int last = -1; /* marca se o ultimo foi \n(0), delimitador(1), numero(2), definir delimitador '/' (3) ou ainda incluindo delimitadores*/
 	int qte_delimitador=1;
 	int size_of_del=0;
 	strcpy(delimitador[0],",");
@@ -34,13 +38,13 @@ int soma_string(char * string_entrada ){
 	while(1){
 		strcpy(buff,ptr);
 		switch(last){
-			case 5:/**< definir delimitador*/
+			case 5:/* definir delimitador*/
 				strcpy(sbuff,"");
 				strcpy(cbuff,"");
 				while(strstr(cbuff,"]")==NULL){
 					strcat(sbuff,cbuff);
 					sscanf(ptr,"%1s", cbuff);
-					if(ptr == string_entrada + size)/**<Prevenindo buffer overrun*/
+					if(ptr == string_entrada + size)/* Prevenindo buffer overrun*/
 						return -1;
 					ptr++;
 				}
@@ -51,7 +55,7 @@ int soma_string(char * string_entrada ){
 				}
 				last = 4;
 				break;
-			case 4:/**< definir delimitador*/
+			case 4:/* definir delimitador*/
 				if(buff[0] == '\n'){ 
 					last=0;
 				}else if(buff[0] == '['){
@@ -61,7 +65,7 @@ int soma_string(char * string_entrada ){
 					return -1;
 				}
 				break;
-			case 3:/**< definir delimitador*/
+			case 3:/* definir delimitador*/
 				if(buff[0] == '/'){ 
 					last=4;
 					break;
@@ -143,7 +147,7 @@ int soma_string(char * string_entrada ){
 					size_of_del=0;
 					if (!int_readed)
 						return -1;
-				}else if (buff[0]==0){/**< Final do vetor*/
+				}else if (buff[0]==0){/* Final do vetor*/
 					if (!int_readed)
 						return -1;
 					return sum;
@@ -154,7 +158,7 @@ int soma_string(char * string_entrada ){
 					return -1;
 				}
 				break;
-			case -1:/**< Estado Inicial*/
+			case -1:/* Estado Inicial*/
 				if(buff[0] >= '0'&& buff[0] <='9'){
 					sum += buff[0] - '0';
 					int_last[int_last_cont] = buff[0];
