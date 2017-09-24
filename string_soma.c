@@ -92,7 +92,9 @@ int soma_string(const char * string_entrada ){
 				}else if(contains_char(delimitador,buff)){ 
 					int_last_cont=0;
 					last = 0;
-					qte_int_readed =0;
+					if(buff == '\n'){
+						qte_int_readed =0;
+					}
 				}else return -1;
 				break;
 			case 1:
@@ -109,7 +111,9 @@ int soma_string(const char * string_entrada ){
 					return sum;
 				}else if(contains_char(delimitador,buff)){ 
 					last = 0;
-					qte_int_readed =0;
+					if(buff == '\n'){
+						qte_int_readed =0;
+					}
 					break;
 				}else return -1;
 				break;
@@ -129,11 +133,13 @@ int soma_string(const char * string_entrada ){
 					if (!int_readed)
 						return -1;
 				}else if (ptr == string_entrada+strlen(string_entrada)+1){/**< Final do vetor*/
-					if (!int_readed)
+					if (!int_readed || qte_int_readed != 0)
 						return -1;
 					return sum;
-				}else if(contains_char(delimitador,buff)){ 
-					qte_int_readed =0;
+				}else if(contains_char(delimitador,buff)){
+					if(buff == '\n'){
+						qte_int_readed =0;
+					}
 					break;
 				}else{
 					return -1;
