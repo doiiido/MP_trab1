@@ -17,7 +17,7 @@ int matches_next (const int size,char *string, char * regex, int qte,int *size_o
 	return 0;
 }	
 
-int soma_string(const char * string_entrada ){
+int soma_string(char * string_entrada ){
 	const int size = strlen(string_entrada)+1;
 	const char * ptr = string_entrada;
 	char buff[size], sbuff[size], cbuff[2];
@@ -40,6 +40,8 @@ int soma_string(const char * string_entrada ){
 				while(strstr(cbuff,"]")==NULL){
 					strcat(sbuff,cbuff);
 					sscanf(ptr,"%1s", cbuff);
+					if(ptr == string_entrada + size)/**<Prevenindo buffer overrun*/
+						return -1;
 					ptr++;
 				}
 				ptr--;

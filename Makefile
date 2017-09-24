@@ -13,9 +13,12 @@ gcov:
 	./test
 	gcov -r testa_string_soma.c
 	
-check:
+cppcheck:
 	cppcheck testa_string_soma.c --enable=warning
 	
+valgrind:
+	g++ testa_string_soma_stdin.c -o soma.out -lgtest -pthread
+	valgrind --leak-check=yes ./soma.out <entrada.txt >saida.txt
+	
 clean:
-	rm *.gc*
-	rm test
+	rm test||	rm *.gc*||	rm soma.out
