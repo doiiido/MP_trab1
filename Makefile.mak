@@ -1,4 +1,7 @@
 all:
+	g++ testa_soma_string_stdin.c -o test -lgtest -pthread
+	
+test:
 	g++ testa_string_soma.c -o test -lgtest -pthread
 	./test
 	

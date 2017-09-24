@@ -59,6 +59,7 @@ TEST (Calculadora_Trab1, 3_virg_2000_ql){
 TEST (Calculadora_Trab1, 1_virg_1000_virg_3_ql){ 
 	ASSERT_EQ (1004, soma_string("1,1000,3\n"));
 }
+
 TEST (Calculadora_Trab1, del_ql_2_del_3_ql){ 
 	ASSERT_EQ (5, soma_string("//[;]\n2;3\n"));
 }
