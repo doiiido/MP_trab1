@@ -89,6 +89,9 @@ TEST (Calculadora_Trab1, 21_virg_sp_12_ql){
 TEST (Calculadora_Trab1, del1_del2_ql_2_INV_1_INV_3_ql){ 
 	ASSERT_EQ (-1, soma_string("//[**][%%%]\n2***1%%3\n"));
 }
+TEST (Calculadora_Trab1, del1_del2_ql_2_del1_1_INV_3_ql){ 
+	ASSERT_EQ (-1, soma_string("//[**][%%]\n2**1%3\n"));
+}
 TEST (Calculadora_Trab1, del_ql_2_del_3_del_4_del_5_ql){ 
 	ASSERT_EQ (-1, soma_string("//[;]\n2;3;4;5\n"));
 }
