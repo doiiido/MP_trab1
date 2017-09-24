@@ -18,9 +18,9 @@ int matches_next (const int size,char *string, char * regex, int qte,int *size_o
 }	
 
 int soma_string(const char * string_entrada ){
-	const int size = strlen(string_entrada);
+	const int size = strlen(string_entrada)+1;
 	const char * ptr = string_entrada;
-	char buff[size], sbuff[size];
+	char buff[size], sbuff[size], cbuff[2];
 	char int_last[4]={'i','i','i','i'};/**< guarda os inteiros lidos anteriormente para reprocessamento da base 10 (i representa invalido). ex.: 12 = 1*10^1 + 2*10^0.*/
 	char delimitador[size][size];
 	int sum=0, int_last_cont=0, i=0, j=0, int_readed = 0, qte_int_readed=0;
@@ -35,13 +35,19 @@ int soma_string(const char * string_entrada ){
 		strcpy(buff,ptr);
 		switch(last){
 			case 5:/**< definir delimitador*/
-				sscanf(ptr," %[^]]", sbuff);
+				strcpy(sbuff,"");
+				strcpy(cbuff,"");
+				while(strstr(cbuff,"]")==NULL){
+					strcat(sbuff,cbuff);
+					sscanf(ptr,"%1s", cbuff);
+					ptr++;
+				}
+				ptr--;
 				if(strlen(sbuff)>0){
 					strcpy(delimitador[qte_delimitador],sbuff);
 					qte_delimitador++;
 				}
 				last = 4;
-				ptr+=strlen(sbuff);
 				break;
 			case 4:/**< definir delimitador*/
 				if(buff[0] == '\n'){ 

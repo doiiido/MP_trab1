@@ -1,0 +1,116 @@
+        -:    0:Source:testa_string_soma.c
+        -:    0:Graph:testa_string_soma.gcno
+        -:    0:Data:testa_string_soma.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*! \file */
+        -:    2:
+        -:    3:#include "gtest/gtest.h"
+        -:    4:#include "string_soma.h"
+        -:    5:/**\Class testes
+        -:    6:*\brief Função que descreve os testes 
+        -:    7:*/
+        -:    8:/** Testes baseados no documento de especificação
+        -:    9:*/
+        -:   10:
+        5:   11:TEST (Calculadora_Trab1, 1_virg_2_ql){ 
+        1:   12:	ASSERT_EQ (3, soma_string("1,2\n"));
+        -:   13:}
+        5:   14:TEST (Calculadora_Trab1, 3_virg_2_virg_1_ql){ 
+        1:   15:	ASSERT_EQ (6, soma_string("3,2,1\n")); 
+        -:   16:}
+        5:   17:TEST (Calculadora_Trab1, 1_virg_ql){ 
+        1:   18:	ASSERT_EQ (-1, soma_string("1,\n"));
+        -:   19:}
+        5:   20:TEST (Calculadora_Trab1, virg_2_ql){ 
+        1:   21:	ASSERT_EQ (-1, soma_string(",2\n")); 
+        -:   22:}
+        5:   23:TEST (Calculadora_Trab1, 1_2virg_2_ql){ 
+        1:   24:	ASSERT_EQ (-1, soma_string("1,,2\n"));
+        -:   25:}
+        5:   26:TEST (Calculadora_Trab1, virg_ql){ 
+        1:   27:	ASSERT_EQ (-1, soma_string(",\n")); 
+        -:   28:}
+        5:   29:TEST (Calculadora_Trab1, 1_dotvirg_2_ql){ 
+        1:   30:	ASSERT_EQ (-1, soma_string("1;2\n"));
+        -:   31:}
+        5:   32:TEST (Calculadora_Trab1, 1_virg_2){ 
+        1:   33:	ASSERT_EQ (-1, soma_string("1,2")); 
+        -:   34:}
+        5:   35:TEST (Calculadora_Trab1, 1_virg_2_ql_sp){ 
+        1:   36:	ASSERT_EQ (-1, soma_string("1,2\n "));
+        -:   37:}
+        5:   38:TEST (Calculadora_Trab1, 1_ql_virg_2_ql){ 
+        1:   39:	ASSERT_EQ (3, soma_string("1\n,2\n")); 
+        -:   40:}
+        5:   41:TEST (Calculadora_Trab1, 1_ql_ql_ql_virg_4_ql){ 
+        1:   42:	ASSERT_EQ (5, soma_string("1\n\n\n,4\n"));
+        -:   43:}
+        5:   44:TEST (Calculadora_Trab1, 1_ql_ql_ql_virg_ql_ql_ql_3_ql){ 
+        1:   45:	ASSERT_EQ (4, soma_string("1\n\n\n,\n\n\n3\n")); 
+        -:   46:}
+        5:   47:TEST (Calculadora_Trab1, 1_virg_2_virg_3_virg_4_ql){ 
+        1:   48:	ASSERT_EQ (-1, soma_string("1,2,3,4\n"));
+        -:   49:}
+        5:   50:TEST (Calculadora_Trab1, 1_virg_2_virg_3_ql_virg_4_ql){ 
+        1:   51:	ASSERT_EQ (10, soma_string("1,2,3\n,4\n"));
+        -:   52:}
+        5:   53:TEST (Calculadora_Trab1, 1_virg_neg_virg_3_ql){ 
+        1:   54:	ASSERT_EQ (-1, soma_string("1,-2,3\n"));
+        -:   55:}
+        5:   56:TEST (Calculadora_Trab1, 3_virg_2000_ql){ 
+        1:   57:	ASSERT_EQ (-1, soma_string("3,2000\n"));
+        -:   58:}
+        5:   59:TEST (Calculadora_Trab1, 1_virg_1000_virg_3_ql){ 
+        1:   60:	ASSERT_EQ (1004, soma_string("1,1000,3\n"));
+        -:   61:}
+        -:   62:
+        5:   63:TEST (Calculadora_Trab1, del_ql_2_del_3_ql){ 
+        1:   64:	ASSERT_EQ (5, soma_string("//[;]\n2;3\n"));
+        -:   65:}
+        5:   66:TEST (Calculadora_Trab1, del_2_del_3_del_4_ql){ 
+        1:   67:	ASSERT_EQ (-1, soma_string("//[***]2***3***4\n"));
+        -:   68:}
+        5:   69:TEST (Calculadora_Trab1, del1_del2_ql_2_del1_1_del2_3_ql){ 
+        1:   70:	ASSERT_EQ (6, soma_string("//[**][%%%]\n2**1%%%3\n"));
+        -:   71:}
+        -:   72:
+        -:   73:/**\Class testes_unit
+        -:   74:		Testes de desenvolvimento
+        -:   75:*/
+        -:   76:
+        5:   77:TEST (Calculadora_Trab1, 21_virg_12_ql){ 
+        1:   78:	ASSERT_EQ (33, soma_string("21,12\n"));
+        -:   79:}
+        5:   80:TEST (Calculadora_Trab1, sp_21_virg_12_ql){ 
+        1:   81:	ASSERT_EQ (-1, soma_string(" 21,12\n"));
+        -:   82:}
+        5:   83:TEST (Calculadora_Trab1, 21_sp_virg_12_ql){ 
+        1:   84:	ASSERT_EQ (-1, soma_string("21 ,12\n"));
+        -:   85:}
+        5:   86:TEST (Calculadora_Trab1, 21_virg_sp_12_ql){ 
+        1:   87:	ASSERT_EQ (-1, soma_string("21, 12\n"));
+        -:   88:}
+        5:   89:TEST (Calculadora_Trab1, del1_del2_ql_2_INV_1_INV_3_ql){ 
+        1:   90:	ASSERT_EQ (-1, soma_string("//[**][%%%]\n2***1%%3\n"));
+        -:   91:}
+        5:   92:TEST (Calculadora_Trab1, del1_del2_ql_2_del1_1_INV_3_ql){ 
+        1:   93:	ASSERT_EQ (-1, soma_string("//[**][%%]\n2**1%3\n"));
+        -:   94:}
+        5:   95:TEST (Calculadora_Trab1, del_ql_2_del_3_del_4_del_5_ql){ 
+        1:   96:	ASSERT_EQ (-1, soma_string("//[;]\n2;3;4;5\n"));
+        -:   97:}
+        5:   98:TEST (Calculadora_Trab1, del_ql_2_del_3_ql_del_4_del_5_ql){ 
+        1:   99:	ASSERT_EQ (14, soma_string("//[;]\n2;3\n;4;5\n"));
+        -:  100:}
+        5:  101:TEST (Calculadora_Trab1, del_ql_2_del_3_del){ 
+        1:  102:	ASSERT_EQ (-1, soma_string("//[;]\n2;3;"));
+        -:  103:}
+        5:  104:TEST (Calculadora_Trab1, del_ql_1_del_2_ql){ 
+        1:  105:	ASSERT_EQ (3, soma_string("//[**]\n1**2\n"));
+        -:  106:}
+        -:  107:
+        1:  108:int main(int argc, char **argv) {
+        1:  109:  ::testing::InitGoogleTest(&argc, argv);
+        1:  110:  return RUN_ALL_TESTS();
+        3:  111:}

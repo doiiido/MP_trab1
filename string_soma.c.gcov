@@ -1,0 +1,183 @@
+        -:    0:Source:string_soma.c
+        -:    0:Graph:testa_string_soma.gcno
+        -:    0:Data:testa_string_soma.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*! \file */
+        -:    2:#include <stdio.h>
+        -:    3:#include <math.h>
+        -:    4:#include <string.h>
+        -:    5:
+       78:    6:int matches_next (const int size,char *string, char * regex, int qte,int *size_of_del){
+        -:    7:	int i;
+       78:    8:	char * ptr, *ptr2 = regex;
+      148:    9:	for(i=0;i<qte;i++){
+      106:   10:		 ptr = strstr(string,ptr2);
+      106:   11:		 if(ptr != NULL && ptr == string){
+       36:   12:			 *size_of_del = strlen(ptr2); 
+       36:   13:			 return 1;
+        -:   14:		 }
+       70:   15:		 ptr2 += size;
+        -:   16:	}
+       42:   17:	return 0;
+        -:   18:}	
+        -:   19:
+       30:   20:int soma_string(const char * string_entrada ){
+       30:   21:	const int size = strlen(string_entrada)+1;
+       30:   22:	const char * ptr = string_entrada;
+       30:   23:	char buff[size], sbuff[size], cbuff[2];
+       30:   24:	char int_last[4]={'i','i','i','i'};/**< guarda os inteiros lidos anteriormente para reprocessamento da base 10 (i representa invalido). ex.: 12 = 1*10^1 + 2*10^0.*/
+       30:   25:	char delimitador[size][size];
+       30:   26:	int sum=0, int_last_cont=0, i=0, j=0, int_readed = 0, qte_int_readed=0;
+        -:   27:	int ibuff;
+       30:   28:	int potencia10 = 0;/**< guarda a ultima potencia de 10*/
+       30:   29:	int last = -1; /**< marca se o ultimo foi \n(0), delimitador(1), numero(2), definir delimitador '/' (3) ou ainda incluindo delimitadores*/
+       30:   30:	int qte_delimitador=1;
+       30:   31:	int size_of_del=0;
+       30:   32:	strcpy(delimitador[0],",");
+        -:   33:	
+      175:   34:	while(1){
+      205:   35:		strcpy(buff,ptr);
+      205:   36:		switch(last){
+        -:   37:			case 5:/**< definir delimitador*/
+       12:   38:				strcpy(sbuff,"");
+       12:   39:				strcpy(cbuff,"");
+       82:   40:				while(strstr(cbuff,"]")==NULL){
+       35:   41:					strcat(sbuff,cbuff);
+       35:   42:					sscanf(ptr,"%1s", cbuff);
+       35:   43:					ptr++;
+        -:   44:				}
+       12:   45:				ptr--;
+       12:   46:				if(strlen(sbuff)>0){
+       12:   47:					strcpy(delimitador[qte_delimitador],sbuff);
+       12:   48:					qte_delimitador++;
+        -:   49:				}
+       12:   50:				last = 4;
+       12:   51:				break;
+        -:   52:			case 4:/**< definir delimitador*/
+       21:   53:				if(buff[0] == '\n'){ 
+        8:   54:					last=0;
+       13:   55:				}else if(buff[0] == '['){
+       12:   56:					last = 5;
+       12:   57:					break;
+        -:   58:				}else{
+        1:   59:					return -1;
+        -:   60:				}
+        8:   61:				break;
+        -:   62:			case 3:/**< definir delimitador*/
+        9:   63:				if(buff[0] == '/'){ 
+        9:   64:					last=4;
+        9:   65:					break;
+        -:   66:				}else{
+    #####:   67:					return -1;
+        -:   68:				}
+        -:   69:				break;
+        -:   70:			case 2:
+       63:   71:				if(buff[0] >= '0'&& buff[0] <='9'){
+       10:   72:					i = int_last_cont - 1;
+       10:   73:					j=0;
+       42:   74:					while (i>=0){
+       16:   75:						sum -= (int_last[i] - '0')*pow(10,j);
+       16:   76:						i--;
+       16:   77:						j++;
+       16:   78:						qte_int_readed --;
+        -:   79:					}
+       10:   80:					j = int_last_cont;
+       10:   81:					i=0;
+       10:   82:					ibuff = sum;
+       42:   83:					while (i<int_last_cont){
+       16:   84:						sum += (int_last[i] - '0')*pow(10,j);
+       16:   85:						i++;
+       16:   86:						j--;
+        -:   87:					}
+       10:   88:					if(sum-ibuff >1000){
+        1:   89:						return -1;
+        -:   90:					}
+        9:   91:					last = 2;
+        9:   92:					sum += buff[0] - '0';
+        9:   93:					int_last[int_last_cont] = buff[0];
+        9:   94:					int_last_cont ++;
+        9:   95:					int_readed = 1;
+        9:   96:					qte_int_readed ++;
+       18:   97:					if (qte_int_readed > 3)
+    #####:   98:						return -1;
+       53:   99:				}else if(matches_next(size,buff,(char*)&delimitador[0],qte_delimitador,&size_of_del)){
+       31:  100:					int_last_cont=0;
+       31:  101:					last = 1;
+       31:  102:					int_readed = 0;
+       31:  103:					ptr += size_of_del-1;
+       31:  104:					size_of_del=0;
+       22:  105:				}else if(buff[0] =='\n'){ 
+       18:  106:					int_last_cont=0;
+       18:  107:					last = 0;
+       18:  108:					qte_int_readed =0;
+        4:  109:				}else return -1;
+       58:  110:				break;
+        -:  111:			case 1:
+       36:  112:				if(buff[0] >= '0'&& buff[0] <='9'){
+       29:  113:					sum += buff[0] - '0';
+       29:  114:					int_last[int_last_cont] = buff[0];
+       29:  115:					int_last_cont ++;
+       29:  116:					last = 2;
+       29:  117:					int_readed = 1;
+       29:  118:					qte_int_readed ++;
+       56:  119:					if (qte_int_readed > 3)
+        2:  120:						return -1;
+        7:  121:				}else if(buff[0] =='\n'){ 
+        2:  122:					last = 0;
+        2:  123:					qte_int_readed =0;
+        2:  124:					break;
+        5:  125:				}else return -1;
+       27:  126:				break;
+        -:  127:			case 0:
+       34:  128:				if(buff[0] >= '0'&& buff[0] <='9'){
+        9:  129:					sum += buff[0] - '0';
+        9:  130:					int_last[int_last_cont] = buff[0];
+        9:  131:					int_last_cont ++;
+        9:  132:					last = 2;
+        9:  133:					int_readed = 1;
+        9:  134:					qte_int_readed ++;
+       18:  135:					if (qte_int_readed > 3)
+    #####:  136:						return -1;
+       25:  137:				}else if(matches_next(size,buff,(char*)&delimitador[0],qte_delimitador,&size_of_del)){
+        5:  138:					int_last_cont=0;
+        5:  139:					last = 1;
+        5:  140:					ptr += size_of_del-1;
+        5:  141:					size_of_del=0;
+        5:  142:					if (!int_readed)
+    #####:  143:						return -1;
+       20:  144:				}else if (buff[0]==0){/**< Final do vetor*/
+       13:  145:					if (!int_readed)
+        1:  146:						return -1;
+       12:  147:					return sum;
+        7:  148:				}else if(buff[0] =='\n'){ 
+        6:  149:					qte_int_readed =0;
+        6:  150:					break;
+        -:  151:				}else{
+        1:  152:					return -1;
+        -:  153:				}
+       14:  154:				break;
+        -:  155:			case -1:/**< Estado Inicial*/
+       30:  156:				if(buff[0] >= '0'&& buff[0] <='9'){
+       18:  157:					sum += buff[0] - '0';
+       18:  158:					int_last[int_last_cont] = buff[0];
+       18:  159:					int_last_cont ++;
+       18:  160:					last = 2;
+       18:  161:					int_readed = 1;
+       18:  162:					qte_int_readed ++;
+       36:  163:					if (qte_int_readed > 3)
+    #####:  164:						return -1;
+       12:  165:				}else if(buff[0]=='\n'){ 
+    #####:  166:					break;
+       12:  167:				}else if(buff[0] == '/'){ 
+        9:  168:					last=3;
+        9:  169:					break;
+        -:  170:				}else{
+        3:  171:					return -1;
+        -:  172:				}
+       18:  173:				break;
+        -:  174:		}
+      175:  175:		ptr ++;
+        -:  176:	}
+       30:  177:	return -2;
+        -:  178:}
