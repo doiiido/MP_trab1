@@ -3,59 +3,50 @@
 #include <math.h>
 #include <string.h>
 
-int contains(int delimitador[100], int c){
+int matches_next (const int size,char *string, char * regex, int qte,int *size_of_del){
 	int i;
-	for(i=0;i<100;i++){
-		if(c == delimitador[i]){
-			return 1;
-		}
+	char * ptr, *ptr2 = regex;
+	for(i=0;i<qte;i++){
+		 ptr = strstr(string,ptr2);
+		 if(ptr != NULL && ptr == string){
+			 *size_of_del = strlen(ptr2); 
+			 return 1;
+		 }
+		 ptr2 += size;
 	}
 	return 0;
-}
+}	
 
 int soma_string(const char * string_entrada ){
-	char ref = '0';
+	const int size = strlen(string_entrada);
 	const char * ptr = string_entrada;
-	char buff, sbuff[20], cbuff;
+	char buff[size], sbuff[size];
 	char int_last[4]={'i','i','i','i'};/**< guarda os inteiros lidos anteriormente para reprocessamento da base 10 (i representa invalido). ex.: 12 = 1*10^1 + 2*10^0.*/
-	int delimitador[100];
+	char delimitador[size][size];
 	int sum=0, int_last_cont=0, i=0, j=0, int_readed = 0, qte_int_readed=0;
 	int ibuff;
 	int potencia10 = 0;/**< guarda a ultima potencia de 10*/
 	int last = -1; /**< marca se o ultimo foi \n(0), delimitador(1), numero(2), definir delimitador '/' (3) ou ainda incluindo delimitadores*/
 	int qte_delimitador=1;
-	int biggest_delimiter=1, possible_delimiter=0;
-	const char * del;
-	delimitador[0]='\n';
+	int size_of_del=0;
+	strcpy(delimitador[0],",");
+	
 	while(1){
-		sscanf(ptr,"%c", &buff);
-		del = ptr;
-		possible_delimiter=0;
-		for(i=0;i<biggest_delimiter;i++){
-			sscanf(del,"%c", &cbuff);
-			possible_delimiter+= (unsigned)cbuff*pow(100,i);
-			del++;
-		}
+		strcpy(buff,ptr);
 		switch(last){
 			case 5:/**< definir delimitador*/
 				sscanf(ptr," %[^]]", sbuff);
-				ibuff = strlen(sbuff);
-				delimitador[qte_delimitador]=buff;
-				for(i=1;i<ibuff;i++){
-					delimitador[qte_delimitador]+=(unsigned)sbuff[i]*pow(100,i);
-					ptr++;
-					if(i>biggest_delimiter)
-						biggest_delimiter = i;
+				if(strlen(sbuff)>0){
+					strcpy(delimitador[qte_delimitador],sbuff);
+					qte_delimitador++;
 				}
-				printf("Delimiter: %d\n",delimitador[qte_delimitador]); 
-				qte_delimitador++;
 				last = 4;
-				ptr++;
+				ptr+=strlen(sbuff);
 				break;
 			case 4:/**< definir delimitador*/
-				if(buff == '\n'){ 
+				if(buff[0] == '\n'){ 
 					last=0;
-				}else if(buff == '['){
+				}else if(buff[0] == '['){
 					last = 5;
 					break;
 				}else{
@@ -63,7 +54,7 @@ int soma_string(const char * string_entrada ){
 				}
 				break;
 			case 3:/**< definir delimitador*/
-				if(buff == '/'){ 
+				if(buff[0] == '/'){ 
 					last=4;
 					break;
 				}else{
@@ -71,7 +62,7 @@ int soma_string(const char * string_entrada ){
 				}
 				break;
 			case 2:
-				if(buff >= '0'&& buff <='9'){
+				if(buff[0] >= '0'&& buff[0] <='9'){
 					i = int_last_cont - 1;
 					j=0;
 					while (i>=0){
@@ -92,87 +83,82 @@ int soma_string(const char * string_entrada ){
 						return -1;
 					}
 					last = 2;
-					sum += buff - '0';
-					int_last[int_last_cont] = buff;
+					sum += buff[0] - '0';
+					int_last[int_last_cont] = buff[0];
 					int_last_cont ++;
 					int_readed = 1;
 					qte_int_readed ++;
 					if (qte_int_readed > 3)
 						return -1;
-				}else if(buff == ','){
+				}else if(matches_next(size,buff,(char*)&delimitador[0],qte_delimitador,&size_of_del)){
 					int_last_cont=0;
 					last = 1;
 					int_readed = 0;
-				}else if(contains(delimitador,possible_delimiter)){ 
+					ptr += size_of_del-1;
+					size_of_del=0;
+				}else if(buff[0] =='\n'){ 
 					int_last_cont=0;
 					last = 0;
-					if(buff == '\n'){
-						qte_int_readed =0;
-					}
+					qte_int_readed =0;
 				}else return -1;
 				break;
 			case 1:
-				if(buff >= '0'&& buff <='9'){
-					sum += buff - '0';
-					int_last[int_last_cont] = buff;
+				if(buff[0] >= '0'&& buff[0] <='9'){
+					sum += buff[0] - '0';
+					int_last[int_last_cont] = buff[0];
 					int_last_cont ++;
 					last = 2;
 					int_readed = 1;
 					qte_int_readed ++;
 					if (qte_int_readed > 3)
 						return -1;
-				}else if (ptr == string_entrada+strlen(string_entrada)+1){/**< Final do vetor*/
-					return sum;
-				}else if(contains(delimitador,possible_delimiter)){ 
+				}else if(buff[0] =='\n'){ 
 					last = 0;
-					if(buff == '\n'){
-						qte_int_readed =0;
-					}
+					qte_int_readed =0;
 					break;
 				}else return -1;
 				break;
 			case 0:
-				if(buff >= '0'&& buff <='9'){
-					sum += buff - '0';
-					int_last[int_last_cont] = buff;
+				if(buff[0] >= '0'&& buff[0] <='9'){
+					sum += buff[0] - '0';
+					int_last[int_last_cont] = buff[0];
 					int_last_cont ++;
 					last = 2;
 					int_readed = 1;
 					qte_int_readed ++;
 					if (qte_int_readed > 3)
 						return -1;
-				}else if(buff == ','){
+				}else if(matches_next(size,buff,(char*)&delimitador[0],qte_delimitador,&size_of_del)){
 					int_last_cont=0;
 					last = 1;
+					ptr += size_of_del-1;
+					size_of_del=0;
 					if (!int_readed)
 						return -1;
-				}else if (ptr == string_entrada+strlen(string_entrada)+1){/**< Final do vetor*/
-					if (!int_readed || qte_int_readed != 0)
+				}else if (buff[0]==0){/**< Final do vetor*/
+					if (!int_readed)
 						return -1;
 					return sum;
-				}else if(contains(delimitador,possible_delimiter)){
-					if(buff == '\n'){
-						qte_int_readed =0;
-					}
+				}else if(buff[0] =='\n'){ 
+					qte_int_readed =0;
 					break;
 				}else{
 					return -1;
 				}
 				break;
 			case -1:/**< Estado Inicial*/
-				if(buff >= '0'&& buff <='9'){
-					sum += buff - '0';
-					int_last[int_last_cont] = buff;
+				if(buff[0] >= '0'&& buff[0] <='9'){
+					sum += buff[0] - '0';
+					int_last[int_last_cont] = buff[0];
 					int_last_cont ++;
 					last = 2;
 					int_readed = 1;
 					qte_int_readed ++;
 					if (qte_int_readed > 3)
 						return -1;
-				}else if(contains(delimitador,possible_delimiter)){ 
-					last = 0; 
+				}else if(buff[0]=='\n'){ 
 					break;
-				}else if(buff == '/'){ 
+				}else if(buff[0] == '/'){ 
 					last=3;
 					break;
 				}else{

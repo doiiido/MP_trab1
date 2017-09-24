@@ -101,6 +101,9 @@ TEST (Calculadora_Trab1, del_ql_2_del_3_ql_del_4_del_5_ql){
 TEST (Calculadora_Trab1, del_ql_2_del_3_del){ 
 	ASSERT_EQ (-1, soma_string("//[;]\n2;3;"));
 }
+TEST (Calculadora_Trab1, del_ql_1_del_2_ql){ 
+	ASSERT_EQ (3, soma_string("//[**]\n1**2\n"));
+}
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
