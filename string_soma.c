@@ -92,7 +92,7 @@ int soma_string(char * string_entrada ){
 						j--;
 					}
 					if(sum-ibuff >1000){
-						return -1;
+						sum = ibuff;
 					}
 					last = 2;
 					sum += buff[0] - '0';
@@ -168,7 +168,8 @@ int soma_string(char * string_entrada ){
 					qte_int_readed ++;
 					if (qte_int_readed > 3)
 						return -1;
-				}else if(buff[0]=='\n'){ 
+				}else if(buff[0]=='\n'){
+					return 0;
 					break;
 				}else if(buff[0] == '/'){ 
 					last=3;

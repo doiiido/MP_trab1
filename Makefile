@@ -21,4 +21,4 @@ valgrind:
 	valgrind --leak-check=yes ./testa_soma_string_stdin <entrada.txt >saida.txt
 	
 clean:
-	rm test||	rm *.gc*||	rm soma.out
+	rm test||	rm *.gc*||	rm testa_soma_string_stdin

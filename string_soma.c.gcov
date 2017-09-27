@@ -8,176 +8,182 @@
         -:    3:#include <math.h>
         -:    4:#include <string.h>
         -:    5:
-       78:    6:int matches_next (const int size,char *string, char * regex, int qte,int *size_of_del){
-        -:    7:	int i;
-       78:    8:	char * ptr, *ptr2 = regex;
-      148:    9:	for(i=0;i<qte;i++){
-      106:   10:		 ptr = strstr(string,ptr2);
-      106:   11:		 if(ptr != NULL && ptr == string){
-       36:   12:			 *size_of_del = strlen(ptr2); 
-       36:   13:			 return 1;
-        -:   14:		 }
-       70:   15:		 ptr2 += size;
-        -:   16:	}
-       42:   17:	return 0;
-        -:   18:}	
-        -:   19:
-       30:   20:int soma_string(const char * string_entrada ){
-       30:   21:	const int size = strlen(string_entrada)+1;
-       30:   22:	const char * ptr = string_entrada;
-       30:   23:	char buff[size], sbuff[size], cbuff[2];
-       30:   24:	char int_last[4]={'i','i','i','i'};/**< guarda os inteiros lidos anteriormente para reprocessamento da base 10 (i representa invalido). ex.: 12 = 1*10^1 + 2*10^0.*/
-       30:   25:	char delimitador[size][size];
-       30:   26:	int sum=0, int_last_cont=0, i=0, j=0, int_readed = 0, qte_int_readed=0;
-        -:   27:	int ibuff;
-       30:   28:	int potencia10 = 0;/**< guarda a ultima potencia de 10*/
-       30:   29:	int last = -1; /**< marca se o ultimo foi \n(0), delimitador(1), numero(2), definir delimitador '/' (3) ou ainda incluindo delimitadores*/
-       30:   30:	int qte_delimitador=1;
-       30:   31:	int size_of_del=0;
-       30:   32:	strcpy(delimitador[0],",");
-        -:   33:	
-      175:   34:	while(1){
-      205:   35:		strcpy(buff,ptr);
-      205:   36:		switch(last){
-        -:   37:			case 5:/**< definir delimitador*/
-       12:   38:				strcpy(sbuff,"");
-       12:   39:				strcpy(cbuff,"");
-       82:   40:				while(strstr(cbuff,"]")==NULL){
-       35:   41:					strcat(sbuff,cbuff);
-       35:   42:					sscanf(ptr,"%1s", cbuff);
-       35:   43:					ptr++;
-        -:   44:				}
-       12:   45:				ptr--;
-       12:   46:				if(strlen(sbuff)>0){
-       12:   47:					strcpy(delimitador[qte_delimitador],sbuff);
-       12:   48:					qte_delimitador++;
-        -:   49:				}
-       12:   50:				last = 4;
-       12:   51:				break;
-        -:   52:			case 4:/**< definir delimitador*/
-       21:   53:				if(buff[0] == '\n'){ 
-        8:   54:					last=0;
-       13:   55:				}else if(buff[0] == '['){
-       12:   56:					last = 5;
-       12:   57:					break;
-        -:   58:				}else{
-        1:   59:					return -1;
-        -:   60:				}
-        8:   61:				break;
-        -:   62:			case 3:/**< definir delimitador*/
-        9:   63:				if(buff[0] == '/'){ 
-        9:   64:					last=4;
-        9:   65:					break;
-        -:   66:				}else{
-    #####:   67:					return -1;
-        -:   68:				}
-        -:   69:				break;
-        -:   70:			case 2:
-       63:   71:				if(buff[0] >= '0'&& buff[0] <='9'){
-       10:   72:					i = int_last_cont - 1;
-       10:   73:					j=0;
-       42:   74:					while (i>=0){
-       16:   75:						sum -= (int_last[i] - '0')*pow(10,j);
-       16:   76:						i--;
-       16:   77:						j++;
-       16:   78:						qte_int_readed --;
-        -:   79:					}
-       10:   80:					j = int_last_cont;
-       10:   81:					i=0;
-       10:   82:					ibuff = sum;
-       42:   83:					while (i<int_last_cont){
-       16:   84:						sum += (int_last[i] - '0')*pow(10,j);
-       16:   85:						i++;
-       16:   86:						j--;
-        -:   87:					}
-       10:   88:					if(sum-ibuff >1000){
-        1:   89:						return -1;
-        -:   90:					}
-        9:   91:					last = 2;
-        9:   92:					sum += buff[0] - '0';
-        9:   93:					int_last[int_last_cont] = buff[0];
-        9:   94:					int_last_cont ++;
-        9:   95:					int_readed = 1;
-        9:   96:					qte_int_readed ++;
-       18:   97:					if (qte_int_readed > 3)
-    #####:   98:						return -1;
-       53:   99:				}else if(matches_next(size,buff,(char*)&delimitador[0],qte_delimitador,&size_of_del)){
-       31:  100:					int_last_cont=0;
-       31:  101:					last = 1;
-       31:  102:					int_readed = 0;
-       31:  103:					ptr += size_of_del-1;
-       31:  104:					size_of_del=0;
-       22:  105:				}else if(buff[0] =='\n'){ 
-       18:  106:					int_last_cont=0;
-       18:  107:					last = 0;
-       18:  108:					qte_int_readed =0;
-        4:  109:				}else return -1;
-       58:  110:				break;
-        -:  111:			case 1:
-       36:  112:				if(buff[0] >= '0'&& buff[0] <='9'){
-       29:  113:					sum += buff[0] - '0';
-       29:  114:					int_last[int_last_cont] = buff[0];
-       29:  115:					int_last_cont ++;
-       29:  116:					last = 2;
-       29:  117:					int_readed = 1;
-       29:  118:					qte_int_readed ++;
-       56:  119:					if (qte_int_readed > 3)
-        2:  120:						return -1;
-        7:  121:				}else if(buff[0] =='\n'){ 
-        2:  122:					last = 0;
-        2:  123:					qte_int_readed =0;
-        2:  124:					break;
-        5:  125:				}else return -1;
-       27:  126:				break;
-        -:  127:			case 0:
-       34:  128:				if(buff[0] >= '0'&& buff[0] <='9'){
-        9:  129:					sum += buff[0] - '0';
-        9:  130:					int_last[int_last_cont] = buff[0];
-        9:  131:					int_last_cont ++;
-        9:  132:					last = 2;
-        9:  133:					int_readed = 1;
-        9:  134:					qte_int_readed ++;
-       18:  135:					if (qte_int_readed > 3)
-    #####:  136:						return -1;
-       25:  137:				}else if(matches_next(size,buff,(char*)&delimitador[0],qte_delimitador,&size_of_del)){
-        5:  138:					int_last_cont=0;
-        5:  139:					last = 1;
-        5:  140:					ptr += size_of_del-1;
-        5:  141:					size_of_del=0;
-        5:  142:					if (!int_readed)
-    #####:  143:						return -1;
-       20:  144:				}else if (buff[0]==0){/**< Final do vetor*/
-       13:  145:					if (!int_readed)
-        1:  146:						return -1;
-       12:  147:					return sum;
-        7:  148:				}else if(buff[0] =='\n'){ 
-        6:  149:					qte_int_readed =0;
-        6:  150:					break;
-        -:  151:				}else{
-        1:  152:					return -1;
-        -:  153:				}
-       14:  154:				break;
-        -:  155:			case -1:/**< Estado Inicial*/
-       30:  156:				if(buff[0] >= '0'&& buff[0] <='9'){
-       18:  157:					sum += buff[0] - '0';
-       18:  158:					int_last[int_last_cont] = buff[0];
-       18:  159:					int_last_cont ++;
-       18:  160:					last = 2;
-       18:  161:					int_readed = 1;
-       18:  162:					qte_int_readed ++;
-       36:  163:					if (qte_int_readed > 3)
-    #####:  164:						return -1;
-       12:  165:				}else if(buff[0]=='\n'){ 
-    #####:  166:					break;
-       12:  167:				}else if(buff[0] == '/'){ 
-        9:  168:					last=3;
-        9:  169:					break;
-        -:  170:				}else{
-        3:  171:					return -1;
-        -:  172:				}
-       18:  173:				break;
-        -:  174:		}
-      175:  175:		ptr ++;
-        -:  176:	}
-       30:  177:	return -2;
-        -:  178:}
+        -:    6:
+        -:    7:/** A funçao matches_next recebe uma string, o tamanho dela, um array de strings a serem comparadas e a quantidade que há nesse array
+        -:    8:*	Retornado se foi encontrado ou nao e passando via referencia o tamanho da string encontrada
+        -:    9:*/
+       78:   10:int matches_next (const int size,char *string, char * regex, int qte,int *size_of_del){
+        -:   11:	int i;
+       78:   12:	char * ptr, *ptr2 = regex;
+      148:   13:	for(i=0;i<qte;i++){
+      106:   14:		 ptr = strstr(string,ptr2);
+      106:   15:		 if(ptr != NULL && ptr == string){
+       36:   16:			 *size_of_del = strlen(ptr2); 
+       36:   17:			 return 1;
+        -:   18:		 }
+       70:   19:		 ptr2 += size;
+        -:   20:	}
+       42:   21:	return 0;
+        -:   22:}	
+        -:   23:
+       31:   24:int soma_string(char * string_entrada ){
+       31:   25:	const int size = strlen(string_entrada)+1;
+       31:   26:	const char * ptr = string_entrada;
+       31:   27:	char buff[size], sbuff[size], cbuff[2];
+       31:   28:	char int_last[4]={'i','i','i','i'};/* guarda os inteiros lidos anteriormente para reprocessamento da base 10 (i representa invalido). ex.: 12 = 1*10^1 + 2*10^0.*/
+       31:   29:	char delimitador[size][size];
+       31:   30:	int sum=0, int_last_cont=0, i=0, j=0, int_readed = 0, qte_int_readed=0;
+        -:   31:	int ibuff;
+       31:   32:	int potencia10 = 0;/* guarda a ultima potencia de 10*/
+       31:   33:	int last = -1; /* marca se o ultimo foi \n(0), delimitador(1), numero(2), definir delimitador '/' (3) ou ainda incluindo delimitadores*/
+       31:   34:	int qte_delimitador=1;
+       31:   35:	int size_of_del=0;
+       31:   36:	strcpy(delimitador[0],",");
+        -:   37:	
+      178:   38:	while(1){
+      209:   39:		strcpy(buff,ptr);
+      209:   40:		switch(last){
+        -:   41:			case 5:/* definir delimitador*/
+       13:   42:				strcpy(sbuff,"");
+       13:   43:				strcpy(cbuff,"");
+      101:   44:				while(strstr(cbuff,"]")==NULL){
+       45:   45:					strcat(sbuff,cbuff);
+       45:   46:					sscanf(ptr,"%1s", cbuff);
+       45:   47:					if(ptr == string_entrada + size)/* Prevenindo buffer overrun*/
+        1:   48:						return -1;
+       44:   49:					ptr++;
+        -:   50:				}
+       12:   51:				ptr--;
+       12:   52:				if(strlen(sbuff)>0){
+       12:   53:					strcpy(delimitador[qte_delimitador],sbuff);
+       12:   54:					qte_delimitador++;
+        -:   55:				}
+       12:   56:				last = 4;
+       12:   57:				break;
+        -:   58:			case 4:/* definir delimitador*/
+       22:   59:				if(buff[0] == '\n'){ 
+        8:   60:					last=0;
+       14:   61:				}else if(buff[0] == '['){
+       13:   62:					last = 5;
+       13:   63:					break;
+        -:   64:				}else{
+        1:   65:					return -1;
+        -:   66:				}
+        8:   67:				break;
+        -:   68:			case 3:/* definir delimitador*/
+       10:   69:				if(buff[0] == '/'){ 
+       10:   70:					last=4;
+       10:   71:					break;
+        -:   72:				}else{
+    #####:   73:					return -1;
+        -:   74:				}
+        -:   75:				break;
+        -:   76:			case 2:
+       63:   77:				if(buff[0] >= '0'&& buff[0] <='9'){
+       10:   78:					i = int_last_cont - 1;
+       10:   79:					j=0;
+       42:   80:					while (i>=0){
+       16:   81:						sum -= (int_last[i] - '0')*pow(10,j);
+       16:   82:						i--;
+       16:   83:						j++;
+       16:   84:						qte_int_readed --;
+        -:   85:					}
+       10:   86:					j = int_last_cont;
+       10:   87:					i=0;
+       10:   88:					ibuff = sum;
+       42:   89:					while (i<int_last_cont){
+       16:   90:						sum += (int_last[i] - '0')*pow(10,j);
+       16:   91:						i++;
+       16:   92:						j--;
+        -:   93:					}
+       10:   94:					if(sum-ibuff >1000){
+        1:   95:						return -1;
+        -:   96:					}
+        9:   97:					last = 2;
+        9:   98:					sum += buff[0] - '0';
+        9:   99:					int_last[int_last_cont] = buff[0];
+        9:  100:					int_last_cont ++;
+        9:  101:					int_readed = 1;
+        9:  102:					qte_int_readed ++;
+       18:  103:					if (qte_int_readed > 3)
+    #####:  104:						return -1;
+       53:  105:				}else if(matches_next(size,buff,(char*)&delimitador[0],qte_delimitador,&size_of_del)){
+       31:  106:					int_last_cont=0;
+       31:  107:					last = 1;
+       31:  108:					int_readed = 0;
+       31:  109:					ptr += size_of_del-1;
+       31:  110:					size_of_del=0;
+       22:  111:				}else if(buff[0] =='\n'){ 
+       18:  112:					int_last_cont=0;
+       18:  113:					last = 0;
+       18:  114:					qte_int_readed =0;
+        4:  115:				}else return -1;
+       58:  116:				break;
+        -:  117:			case 1:
+       36:  118:				if(buff[0] >= '0'&& buff[0] <='9'){
+       29:  119:					sum += buff[0] - '0';
+       29:  120:					int_last[int_last_cont] = buff[0];
+       29:  121:					int_last_cont ++;
+       29:  122:					last = 2;
+       29:  123:					int_readed = 1;
+       29:  124:					qte_int_readed ++;
+       56:  125:					if (qte_int_readed > 3)
+        2:  126:						return -1;
+        7:  127:				}else if(buff[0] =='\n'){ 
+        2:  128:					last = 0;
+        2:  129:					qte_int_readed =0;
+        2:  130:					break;
+        5:  131:				}else return -1;
+       27:  132:				break;
+        -:  133:			case 0:
+       34:  134:				if(buff[0] >= '0'&& buff[0] <='9'){
+        9:  135:					sum += buff[0] - '0';
+        9:  136:					int_last[int_last_cont] = buff[0];
+        9:  137:					int_last_cont ++;
+        9:  138:					last = 2;
+        9:  139:					int_readed = 1;
+        9:  140:					qte_int_readed ++;
+       18:  141:					if (qte_int_readed > 3)
+    #####:  142:						return -1;
+       25:  143:				}else if(matches_next(size,buff,(char*)&delimitador[0],qte_delimitador,&size_of_del)){
+        5:  144:					int_last_cont=0;
+        5:  145:					last = 1;
+        5:  146:					ptr += size_of_del-1;
+        5:  147:					size_of_del=0;
+        5:  148:					if (!int_readed)
+    #####:  149:						return -1;
+       20:  150:				}else if (buff[0]==0){/* Final do vetor*/
+       13:  151:					if (!int_readed)
+        1:  152:						return -1;
+       12:  153:					return sum;
+        7:  154:				}else if(buff[0] =='\n'){ 
+        6:  155:					qte_int_readed =0;
+        6:  156:					break;
+        -:  157:				}else{
+        1:  158:					return -1;
+        -:  159:				}
+       14:  160:				break;
+        -:  161:			case -1:/* Estado Inicial*/
+       31:  162:				if(buff[0] >= '0'&& buff[0] <='9'){
+       18:  163:					sum += buff[0] - '0';
+       18:  164:					int_last[int_last_cont] = buff[0];
+       18:  165:					int_last_cont ++;
+       18:  166:					last = 2;
+       18:  167:					int_readed = 1;
+       18:  168:					qte_int_readed ++;
+       36:  169:					if (qte_int_readed > 3)
+    #####:  170:						return -1;
+       13:  171:				}else if(buff[0]=='\n'){ 
+    #####:  172:					break;
+       13:  173:				}else if(buff[0] == '/'){ 
+       10:  174:					last=3;
+       10:  175:					break;
+        -:  176:				}else{
+        3:  177:					return -1;
+        -:  178:				}
+       18:  179:				break;
+        -:  180:		}
+      178:  181:		ptr ++;
+        -:  182:	}
+       31:  183:	return -2;
+        -:  184:}

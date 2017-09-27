@@ -8,6 +8,12 @@
 /** Testes baseados no documento de especificação
 */
 
+TEST (Calculadora_Trab1, ql){ 
+	ASSERT_EQ (0, soma_string((char*)"\n"));/**<Teste que verifica se está processando entradas de 2 numeros*/
+}
+TEST (Calculadora_Trab1, 1_ql){ 
+	ASSERT_EQ (1, soma_string((char*)"1\n"));/**<Teste que verifica se está processando entradas de 1 numeros*/
+}
 TEST (Calculadora_Trab1, 1_virg_2_ql){ 
 	ASSERT_EQ (3, soma_string((char*)"1,2\n"));/**<Teste que verifica se está processando entradas de 2 numeros*/
 }
@@ -54,7 +60,7 @@ TEST (Calculadora_Trab1, 1_virg_neg_virg_3_ql){
 	ASSERT_EQ (-1, soma_string((char*)"1,-2,3\n"));/**<Teste que verifica se está invalidando numeros negativos*/
 }
 TEST (Calculadora_Trab1, 3_virg_2000_ql){ 
-	ASSERT_EQ (-1, soma_string((char*)"3,2000\n"));/**<Teste que verifica se está invalidando numeros maiores que 1000*/
+	ASSERT_EQ (3, soma_string((char*)"3,2000\n"));/**<Teste que verifica se está invalidando numeros maiores que 1000*/
 }
 TEST (Calculadora_Trab1, 1_virg_1000_virg_3_ql){ 
 	ASSERT_EQ (1004, soma_string((char*)"1,1000,3\n"));/**<Teste que verifica se está processando numeros até 1000*/
